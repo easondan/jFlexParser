@@ -1,1 +1,3 @@
 output.txt
+*.class
+Lexer.java
