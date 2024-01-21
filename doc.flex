@@ -5,7 +5,8 @@ JFlex Specification for the Doc Parser
 
 
 import java.util.Stack;
-
+import java.util.Arrays;
+import java.util.List;
 %%
 
 %class Lexer
@@ -35,24 +36,31 @@ identifier = {letter}+
 
 // Add statement to check if the pop are the same are the yyText
 "<" \s*({letter}[^\s>]*)\s* ">" {
-    String value = yytext().replaceAll ("[<>/]",""); 
-    tagStack.push(value); 
-    return new Token(Token.OPEN,value,yyline,yycolumn);
+        String[] listWords = {"DOC", "Text", "Date", "DocNo"};
+        List<String> wordsList = Arrays.asList(listWords);
+        String value = yytext().replaceAll ("[<>/]",""); 
+        if (wordsList.contains(value)) {
+            tagStack.push(value); 
+            return new Token(Token.OPEN,value,yyline,yycolumn);
+        } 
     }
 "<" \/\s*({letter}[^\s>]*)\s* ">" {
-    if(tagStack.empty()){
-        System.out.println("ERROR Invalid Closing Tag" + yytext() );
-        System.exit(0);
-    }
-    String value = tagStack.pop();
-    String temp = yytext().replaceAll("[<>/]",""); 
-    if(!value.equals(temp)){
-        System.out.println("ERROR Invalid Closing Tag" + yytext() );
-        System.exit(0);
-        return new Token(Token.ERROR,temp,yyline,yycolumn);
-    }else{
-        return new Token(Token.CLOSE,temp,yyline,yycolumn);
-    } 
+        if(tagStack.empty()){
+            System.out.println("ERROR Invalid Closing Tag" + yytext() );
+            System.exit(0);
+        }
+        String[] listWords = {"DOC", "Text", "Date", "DocNo"};
+        List<String> wordsList = Arrays.asList(listWords);
+        String temp = yytext().replaceAll("[<>/]",""); 
+        if (wordsList.contains(temp)) {
+                String value = tagStack.pop();
+            if(!value.equals(temp)){
+                System.out.println("ERROR Invalid Closing Tag" + yytext());
+                return new Token(Token.ERROR,temp,yyline,yycolumn);
+            }else{
+                return new Token(Token.CLOSE,temp,yyline,yycolumn);
+            } 
+        } 
     }
 
 
