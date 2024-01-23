@@ -3,11 +3,11 @@ class Token {
   public final static int OPEN = 0;
   public final static int CLOSE = 1;
   public final static int WORD = 2;
-  public final static int NUMBERS = 3;
+  public final static int NUMBER = 3;
   public final static int APOSTROPHIZED = 4;
   public final static int HYPHENATED = 5;
-  public final static int PUNCTUATIONS = 6;
-  public final static int DELIMITERS = 7;
+  public final static int PUNCTUATION = 6;
+  public final static int DELIMITER = 7;
   public final static int ERROR = 8;
 
   public int m_type;
@@ -30,16 +30,16 @@ class Token {
         return "CLOSE-"+m_value;
       case WORD:
         return "WORD("+m_value+")";
-      case NUMBERS:
-        return "NUMBERS("+m_value+")";
+      case NUMBER:
+        return "NUMBER("+m_value+")";
       case APOSTROPHIZED:
         return "APOSTROPHIZED("+m_value+")";
       case HYPHENATED:
         return "HYPHENATED("+m_value+")";
-      case PUNCTUATIONS:
-        return "PUNCTUATIONS("+ m_value +")";
-      case DELIMITERS:
-        return "DELIMITERS";
+      case PUNCTUATION:
+        return "PUNCTUATION("+ m_value +")";
+      case DELIMITER:
+        return "DELIMITER";
       case ERROR:
         return "ERROR(" + m_value + ")";
       default:
