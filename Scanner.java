@@ -19,11 +19,12 @@ public class Scanner {
       Scanner scanner = new Scanner(new Lexer(new InputStreamReader(System.in)));
       Token tok = null;
       while ((tok = scanner.getNextToken()) != null) {
-        if(tok.toString().equals("OPEN-DOCID")){
+        String currentToken = tok.toString().toUpperCase();
+        if(currentToken.equals("OPEN-DOCID")){
           check = true;
         }
-        
-        if (tok.toString().equals("OPEN-P")) {
+
+        if (currentToken.equals("OPEN-P")) {
           if (!tokens.empty()) {
             if (tokens.peek().equals("DOC") || tokens.peek().equals("TEXT") || tokens.peek().equals("DATE")
                 || tokens.peek().equals("DOCNO") || tokens.peek().equals("HEADLINE")
@@ -33,27 +34,27 @@ public class Scanner {
           }
 
         }
-        if (tok.toString().matches("OPEN-\\w+([-]+\\w+)?")) {
+        if (currentToken.matches("OPEN-\\w+([-]+\\w+)?")) {
 
-          String value = tok.toString().replaceAll("OPEN-", "");
+          String value = currentToken.replaceAll("OPEN-", "");
           tokens.push(value);
         }
 
-        if (tok.toString().equals("OPEN-DOC") || tok.toString().equals("OPEN-TEXT")
-            || tok.toString().equals("OPEN-DATE") || tok.toString().equals("OPEN-DOCNO")
-            || tok.toString().equals("OPEN-HEADLINE") || tok.toString().equals("OPEN-LENGTH")) {
+        if (currentToken.equals("OPEN-DOC") || currentToken.equals("OPEN-TEXT")
+            || currentToken.equals("OPEN-DATE") || currentToken.equals("OPEN-DOCNO")
+            || currentToken.equals("OPEN-HEADLINE") || currentToken.equals("OPEN-LENGTH")) {
           check = false;
-        } else if (tok.toString().equals("CLOSE-DOC") || tok.toString().equals("CLOSE-TEXT")
-            || tok.toString().equals("CLOSE-DATE") || tok.toString().equals("CLOSE-DOCNO")
-            || tok.toString().equals("CLOSE-HEADLINE") || tok.toString().equals("CLOSE-LENGTH")) {
+        } else if (currentToken.equals("CLOSE-DOC") || currentToken.equals("CLOSE-TEXT")
+            || currentToken.equals("CLOSE-DATE") || currentToken.equals("CLOSE-DOCNO")
+            || currentToken.equals("CLOSE-HEADLINE") || currentToken.equals("CLOSE-LENGTH")) {
           System.out.println(tok);
           check = true;
         }
 
-        if (tok.toString().matches("CLOSE-\\w+")) {
+        if (currentToken.matches("CLOSE-\\w+")) {
           tokens.pop();
         }
-        if (tok.toString().equals("CLOSE-P")) {
+        if (currentToken.equals("CLOSE-P")) {
           if (!tokens.empty()) {
             if (tokens.peek().equals("DOC") || tokens.peek().equals("TEXT") || tokens.peek().equals("DATE")
                 || tokens.peek().equals("DOCNO") || tokens.peek().equals("HEADLINE")
