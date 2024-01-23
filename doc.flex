@@ -29,44 +29,22 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 digit = [0-9]
 number = {digit}+
 letter = [a-zA-Z]
-identifier = {letter}+
-identifier2 = [a-zA-Z\-]+
 alphaNum = [a-zA-Z0-9]+
 %%
 
-"<DOCID>"\s*(\d+)\s*"</DOCID>" {}
+// "<DOCID>"\s*(\d+)\s*"</DOCID>" {}
 
 // Add statement to check if the pop are the same are the yyText
 "<" \s*({letter}[^\s>]*)\s* ">" {
-        String[] listWords = {"DOC", "TEXT", "DATE", "DOCNO","HEADLINE","LENGTH"};
-        List<String> wordsList = Arrays.asList(listWords);
         String value = yytext().replaceAll ("[<>/]",""); 
-        // if(value.equals("P")){
-        //     String popValue = tagStack.pop();
-        //     if(wordsList.contains(popValue)){
-        //             tagStack.push(popValue); 
-        //            tagStack.push(value); 
-        //           return new Token(Token.OPEN,value,yyline,yycolumn);
-        //     }else{
-        //     tagStack.push(popValue); 
-        //     return new Token(Token.OPEN,value,yyline,yycolumn);
-        //     }
-         
-        // }else{
-        //     if(wordsList.contains(value)){
-                   tagStack.push(value); 
-                  return new Token(Token.OPEN,value,yyline,yycolumn);
-        //     }
-        // }
-        
+        tagStack.push(value); 
+        return new Token(Token.OPEN,value,yyline,yycolumn);
     }
 "<" \/\s*({letter}[^\s>]*)\s* ">" {
         if(tagStack.empty()){
             System.out.println("ERROR Invalid Closing Tag" + yytext() );
             System.exit(0);
         }
-        String[] listWords = {"DOC", "TEXT", "DATE", "DOCNO","HEADLINE","LENGTH","P"};
-        List<String> wordsList = Arrays.asList(listWords);
         String temp = yytext().replaceAll("[<>/]",""); 
         String value = tagStack.pop();
             if(!value.equals(temp)){
@@ -76,9 +54,7 @@ alphaNum = [a-zA-Z0-9]+
             }else{
                 return new Token(Token.CLOSE,temp,yyline,yycolumn);
             } 
-
     }
-// robin's-egg
 [$]  {return new Token(Token.PUNCTUATION,yytext(),yyline,yycolumn);}
 
 [a-zA-Z\-0-9]+'{1}[a-zA-Z]+ {return new Token(Token.APOSTROPHIZED,yytext(),yyline,yycolumn);}
@@ -88,8 +64,6 @@ alphaNum = [a-zA-Z0-9]+
 \p{P} {return new Token(Token.PUNCTUATION,yytext(),yyline,yycolumn);}
 
 [-+]?{number}+(\.{number}+)? {String value = yytext().replaceAll("[$+-]","");  return new Token(Token.NUMBER,value,yyline,yycolumn);} 
-
-
 
 {alphaNum} {return new Token(Token.WORD,yytext(),yyline,yycolumn);} 
 
