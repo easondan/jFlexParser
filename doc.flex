@@ -81,7 +81,7 @@ alphaNum = [a-zA-Z0-9]+
 // robin's-egg
 [$]  {return new Token(Token.PUNCTUATION,yytext(),yyline,yycolumn);}
 
-[a-zA-Z\-]+'{1}[a-zA-Z]+ {return new Token(Token.APOSTROPHIZED,yytext(),yyline,yycolumn);}
+[a-zA-Z\-0-9]+'{1}[a-zA-Z]+ {return new Token(Token.APOSTROPHIZED,yytext(),yyline,yycolumn);}
 
 [a-zA-Z0-9]+-{1}[a-zA-Z0-9-]+ {return new Token(Token.HYPHENATED,yytext(),yyline,yycolumn);}
 

@@ -21,14 +21,7 @@ public class Scanner {
       Scanner scanner = new Scanner(new Lexer(new InputStreamReader(System.in)));
       Token tok = null;
       while( (tok=scanner.getNextToken()) != null ){
-        if(tok.toString().equals("WORD(HARARI)")){
-
-          
-          // System.out.println(tokens.elementAt(tokens.size()-2));
-          // System.out.println(tokens.toString());
-          // System.out.println("BRUH");
-          // System.out.println(tokens.peek());
-        }
+ 
         if(tok.toString().equals("OPEN-P")){
           if(!tokens.empty()){
             if( tokens.peek().equals("DOC") ||  tokens.peek().equals("TEXT") ||  tokens.peek().equals("DATE") || tokens.peek().equals("DOCNO") ||   tokens.peek().equals("HEADLINE") ||  tokens.peek().equals("LENGTH")){
@@ -37,11 +30,12 @@ public class Scanner {
           }
           
          }
-        if(tok.toString().matches("OPEN-\\w+")){
+        if(tok.toString().matches("OPEN-\\w+([-]+\\w+)?")){
+          
           String value = tok.toString().replaceAll("OPEN-", "");
-          // System.out.println(value);
           tokens.push(value);
         }
+      
        if(tok.toString().equals("OPEN-DOC")||tok.toString().equals("OPEN-TEXT")||tok.toString().equals("OPEN-DATE")||tok.toString().equals("OPEN-DOCNO")||tok.toString().equals("OPEN-HEADLINE")||tok.toString().equals("OPEN-LENGTH")){
          check = false;
         }else if(tok.toString().equals("CLOSE-DOC")||tok.toString().equals("CLOSE-TEXT")||tok.toString().equals("CLOSE-DATE")||tok.toString().equals("CLOSE-DOCNO")||tok.toString().equals("CLOSE-HEADLINE")||tok.toString().equals("CLOSE-LENGTH")){
@@ -51,7 +45,6 @@ public class Scanner {
 
         if(tok.toString().matches("CLOSE-\\w+")){
           tokens.pop();
-          
         }
          if(tok.toString().equals("CLOSE-P")){
           if(!tokens.empty()){
