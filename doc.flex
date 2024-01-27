@@ -40,12 +40,8 @@ alphaNum = [a-zA-Z0-9]+
       System.out.println("ERROR Invalid Closing Tag" + yytext());
       System.exit(0);
     }
-    String value = tagStack.peek();
-    if (!value.equals(temp)) {
-      System.out.println("ERROR Invalid Closing Tag" + yytext());
-      System.exit(0);
-    }
     String temp = yytext().replaceAll("[<>/ \t\f\r\n\r\n]", "");
+
     if (temp.equals("DOC") || temp.equals("TEXT")
         || temp.equals("DATE") || temp.equals("DOCNO")
         || temp.equals("HEADLINE") || temp.equals("LENGTH")) {
@@ -53,7 +49,12 @@ alphaNum = [a-zA-Z0-9]+
       return new Token(Token.CLOSE, temp, yyline, yycolumn);
     }
 
-    tagStack.pop();
+    String value = tagStack.pop();
+    if (!value.equals(temp)) {
+      System.out.println("ERROR Invalid Closing Tag" + yytext());
+      System.exit(0);
+    }
+
     if (temp.equals("P")) {
       if (!tagStack.empty()) {
         if (tagStack.peek().equals("DOC") || tagStack.peek().equals("TEXT") || tagStack.peek().equals("DATE")

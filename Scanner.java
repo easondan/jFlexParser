@@ -19,10 +19,8 @@ public class Scanner {
     try {
       Scanner scanner = new Scanner(new Lexer(new InputStreamReader(System.in)));
       Token tok = null;
-      while ((tok = scanner.getNextToken()) != null) {
+      while ((tok = scanner.getNextToken()) != null)
         System.out.println(tok);
-
-      }
     }
 
     catch (Exception e) {
