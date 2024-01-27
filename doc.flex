@@ -54,7 +54,7 @@ alphaNum = [a-zA-Z0-9]+
 
     String value = tagStack.pop();
     if (!value.equals(temp)) {
-      mismatchTag.add(value);
+      mismatchTag.add("OPENING: "+value+ " CLOSING: " + yytext());
     }
 
     if (temp.equals("P")) {
