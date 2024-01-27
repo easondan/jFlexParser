@@ -6,7 +6,7 @@ JFlex Specification for the Doc Parser
 
 import java.util.Stack;
 import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 %%
@@ -17,7 +17,11 @@ import java.util.regex.Pattern;
 %column
 
 %eofval{
-    //System.out.println("**** End of the File Reached ****");
+  if(!mismatchTag.isEmpty()){
+      System.out.println("Mismatched Tags ERRORS");
+      mismatchTag.forEach(mismtagTag-> System.out.println(mismatchTag));
+  }
+
     return null;
 %eofval};
 
@@ -25,6 +29,7 @@ import java.util.regex.Pattern;
 %{
 private static Stack<String> tagStack = new Stack<String>();
 Boolean check = false;
+private static ArrayList<String> mismatchTag = new ArrayList<String>();
 %}
 
 LineTerminator = \r|\n|\r\n
@@ -37,29 +42,25 @@ alphaNum = [a-zA-Z0-9]+
 
 "<"\/[^>]*">" {
     if (tagStack.empty()) {
-      System.out.println("ERROR Invalid Closing Tag" + yytext());
-      System.exit(0);
+      
     }
     String temp = yytext().replaceAll("[<>/ \t\f\r\n\r\n]", "");
-
-    if (temp.equals("DOC") || temp.equals("TEXT")
-        || temp.equals("DATE") || temp.equals("DOCNO")
-        || temp.equals("HEADLINE") || temp.equals("LENGTH")) {
-      check = true;
+    ArrayList<String> list = new ArrayList<String>(Arrays.asList("DOC","TEXT","DATE","DOCNO","HEADLINE","LENGTH"));
+    
+    if(list.contains(temp)){
+       check = true;
       return new Token(Token.CLOSE, temp, yyline, yycolumn);
     }
 
     String value = tagStack.pop();
     if (!value.equals(temp)) {
-      System.out.println("ERROR Invalid Closing Tag" + yytext());
-      System.exit(0);
+      mismatchTag.add(value);
     }
 
     if (temp.equals("P")) {
       if (!tagStack.empty()) {
-        if (tagStack.peek().equals("DOC") || tagStack.peek().equals("TEXT") || tagStack.peek().equals("DATE")
-            || tagStack.peek().equals("DOCNO") || tagStack.peek().equals("HEADLINE")
-            || tagStack.peek().equals("LENGTH")) {
+        String topStack = tagStack.peek();
+        if(list.contains(topStack)){
           check = true;
           return new Token(Token.CLOSE, temp, yyline, yycolumn);
         }
@@ -74,6 +75,7 @@ alphaNum = [a-zA-Z0-9]+
 "<"[^>]*">" {
     Pattern pattern = Pattern.compile("<\\s*([-A-Za-z]+)\\s*");
     Matcher matcher = pattern.matcher(yytext());
+    ArrayList<String> list = new ArrayList<String>(Arrays.asList("DOC","TEXT","DATE","DOCNO","HEADLINE","LENGTH"));
     String value = "";
     if (matcher.find()) {
       // Extract and return the first word
@@ -84,18 +86,14 @@ alphaNum = [a-zA-Z0-9]+
     }
     if (value.equals("P")) {
       if (!tagStack.empty()) {
-        if (tagStack.peek().equals("DOC") || tagStack.peek().equals("TEXT") || tagStack.peek().equals("DATE")
-            || tagStack.peek().equals("DOCNO") || tagStack.peek().equals("HEADLINE")
-            || tagStack.peek().equals("LENGTH")) {
+        String topStack  = tagStack.peek();
+        if(list.contains(topStack)){
           check = false;
         }
       }
-
     }
     tagStack.push(value);
-    if (value.equals("DOC") || value.equals("TEXT")
-        || value.equals("DATE") || value.equals("DOCNO")
-        || value.equals("HEADLINE") || value.equals("LENGTH")) {
+    if(list.contains(value)){
       check = false;
     }
     if (check == false) {
