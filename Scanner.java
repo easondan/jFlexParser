@@ -1,7 +1,10 @@
+/*
+ * Name: Eason Liang
+ * Student ID: 1146154
+ * File Name: Scanner.java
+ * Scans in Input and outputs each token
+ */
 import java.io.InputStreamReader;
-import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Scanner {
   private Lexer scanner = null;

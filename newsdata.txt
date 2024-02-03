@@ -719,7 +719,7 @@ postpone plans for marriage until she reconsiders.
 <P>
 Column 
 </P>
-</TYPE2>
+</TYPE>
 </DOC>
 <DOC>
 <DOCNO> LA010190-0011 </DOCNO>
